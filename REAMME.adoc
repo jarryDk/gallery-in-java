@@ -1,0 +1,17 @@
+= Gallery in Java (Quarkus)
+
+
+
+== Start Postgres
+
+[source,bash]
+----
+podman run -d \
+  --rm=true \
+  --name postgres-gallery-in-java \
+  -e POSTGRES_USER=hibernate \
+  -e POSTGRES_PASSWORD=hibernate \
+  -e POSTGRES_DB=gallery-in-java \
+  -p 5432:5432 \
+  postgres:16
+----
