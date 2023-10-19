@@ -3,13 +3,6 @@ package dk.jarry.gallery.boundary;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.UUID;
-
-import org.eclipse.microprofile.rest.client.inject.RestClient;
-import org.junit.jupiter.api.Test;
-
 import dk.jarry.gallery.control.ChuckNorrisJokes;
 import dk.jarry.gallery.control.FolderResourceClient;
 import io.quarkus.test.junit.QuarkusTest;
@@ -17,12 +10,17 @@ import jakarta.inject.Inject;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.junit.jupiter.api.Test;
 
 @QuarkusTest
 public class FolderResourceTest {
 
-    @Inject
-    @RestClient
+    @Inject //
+    @RestClient //
     FolderResourceClient resourceClient;
 
     @Test
@@ -36,7 +34,6 @@ public class FolderResourceTest {
         assertEquals(input.getString("body"), output.getString("body"));
 
         System.out.println("create - Folder " + output);
-
     }
 
     @Test
@@ -59,7 +56,6 @@ public class FolderResourceTest {
         assertEquals(input.getString("body"), output.getString("body"));
 
         System.out.println("read - Folder [2] " + output);
-
     }
 
     @Test
@@ -86,7 +82,6 @@ public class FolderResourceTest {
         assertEquals(input.getString("body"), output.getString("body"));
 
         System.out.println("update - Folder [2] " + output);
-
     }
 
     @Test
@@ -121,11 +116,11 @@ public class FolderResourceTest {
     }
 
     String getSubject() {
-        return "Subject - gallery-st - Timestamp : " + ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT);
+        return "Subject - gallery-st - Timestamp : "
+                + ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT);
     }
 
     String getBody() {
         return ChuckNorrisJokes.getInstance().getRandomJoke();
     }
-
 }

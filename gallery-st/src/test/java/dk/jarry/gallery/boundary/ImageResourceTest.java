@@ -3,27 +3,24 @@ package dk.jarry.gallery.boundary;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.UUID;
-
+import dk.jarry.gallery.control.ChuckNorrisJokes;
+import dk.jarry.gallery.control.ImageResourceClient;
+import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
-
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.junit.jupiter.api.Test;
-
-import dk.jarry.gallery.control.ChuckNorrisJokes;
-import dk.jarry.gallery.control.ImageResourceClient;
-import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
 public class ImageResourceTest {
 
-    @Inject
-    @RestClient
+    @Inject //
+    @RestClient //
     ImageResourceClient resourceClient;
 
     @Test
@@ -37,7 +34,6 @@ public class ImageResourceTest {
         assertEquals(input.getString("body"), output.getString("body"));
 
         System.out.println("create - Image " + output);
-
     }
 
     @Test
@@ -60,7 +56,6 @@ public class ImageResourceTest {
         assertEquals(input.getString("body"), output.getString("body"));
 
         System.out.println("read - Image [2] " + output);
-
     }
 
     @Test
@@ -87,14 +82,13 @@ public class ImageResourceTest {
         assertEquals(input.getString("body"), output.getString("body"));
 
         System.out.println("update - Image [2] " + output);
-
     }
 
     @Test
     public void delete() {
 
-       JsonObject input = getImageInputJsonObjectBuilder().build();
-       
+        JsonObject input = getImageInputJsonObjectBuilder().build();
+
         var output = this.resourceClient.create(input);
 
         assertEquals(input.getString("subject"), output.getString("subject"));
@@ -113,7 +107,7 @@ public class ImageResourceTest {
         }
     }
 
-    JsonObjectBuilder getImageInputJsonObjectBuilder(){
+    JsonObjectBuilder getImageInputJsonObjectBuilder() {
         JsonObjectBuilder createObjectBuilder = Json.createObjectBuilder();
         createObjectBuilder.add("name", "-name");
         createObjectBuilder.add("fileName", "-fileName");
@@ -123,11 +117,11 @@ public class ImageResourceTest {
     }
 
     String getSubject() {
-        return "Subject - gallery-st - Timestamp : " + ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT);
+        return "Subject - gallery-st - Timestamp : "
+                + ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT);
     }
 
     String getBody() {
         return ChuckNorrisJokes.getInstance().getRandomJoke();
     }
-
 }

@@ -9,17 +9,14 @@ public class ChuckNorrisJokes {
 
     static List<String> jokes = new ArrayList<>();
 
-    private ChuckNorrisJokes() {
-    }
+    private ChuckNorrisJokes() {}
 
     public static ChuckNorrisJokes getInstance() {
         return new ChuckNorrisJokes();
     }
 
     public List<String> getJokes() {
-        return Stream.of(cn.split("\n"))
-                .map(elem -> new String(elem))
-                .collect(Collectors.toList());
+        return Stream.of(cn.split("\n")).map(elem -> new String(elem)).collect(Collectors.toList());
     }
 
     public String getRandomJoke() {
@@ -35,7 +32,8 @@ public class ChuckNorrisJokes {
     /**
      * https://parade.com/968666/parade/chuck-norris-jokes/
      */
-    static String cn = """
+    static String cn =
+            """
             Chuck Norris doesn't read books. He stares them down until he gets the information he wants.
             Time waits for no man. Unless that man is Chuck Norris.
             If you spell Chuck Norris in Scrabble, you win. Forever.
@@ -138,5 +136,4 @@ public class ChuckNorrisJokes {
             Chuck Norris can start a fire with an ice cube.
             The flu gets a Chuck Norris shot every year.
                 """;
-
 }

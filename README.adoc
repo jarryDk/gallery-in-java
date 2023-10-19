@@ -1,0 +1,131 @@
+= Gallery in Java (Quarkus)
+
+
+== Containers
+
+=== Network
+
+[source,bash]
+----
+podman network create gallery-in-java
+----
+
+=== Postgres
+
+[source,bash]
+----
+podman run -d \
+  --rm=true \
+  --name postgres-gallery-in-java \
+  --network=gallery-in-java \
+  -e POSTGRES_USER=hibernate \
+  -e POSTGRES_PASSWORD=hibernate \
+  -e POSTGRES_DB=gallery-in-java \
+  -p 5432:5432 \
+  postgres:16
+----
+
+=== Gallery server
+
+[source,bash]
+----
+cd gallery-server
+podman build \
+  -f src/main/docker/Dockerfile.jvm \
+  -t jarrydk/gallery-server-jvm .
+----
+
+[source,bash]
+----
+podman run -d \
+  --rm=true \
+	--name gallery-server-jvm-gallery-in-java \
+  --network=gallery-in-java \
+  -e QUARKUS_DATASOURCE_JDBC_URL=jdbc:postgresql://postgres-gallery-in-java:5432/gallery-in-java \
+  -p 8080:8080 \
+  -p 8443:8443 \
+  jarrydk/gallery-server-jvm
+----
+
+=== Jaeger
+
+[source,bash]
+----
+podman run -d \
+  --rm=true \
+	--name jaeger-gallery-in-java \
+  --network=gallery-in-java \
+	-p 5775:5775/udp \
+	-p 6831:6831/udp \
+	-p 6832:6832/udp \
+	-p 5778:5778 \
+	-p 14268:14268 \
+	-p 16686:16686 \
+	jaegertracing/all-in-one:1.50
+----
+
+You can then navigate to http://localhost:16686 to access the Jaeger UI.
+
+=== Prometheus
+
+[source,bash]
+----
+cd container
+
+tar cf prometheus-config-gallery-in-java.tar prometheus.yml
+
+podman volume create prometheus-config-gallery-in-java
+podman volume import prometheus-config-gallery-in-java prometheus-config-gallery-in-java.tar
+
+rm prometheus-config-gallery-in-java.tar
+----
+
+[source,bash]
+----
+podman run -d \
+  --rm=true \
+	--name prometheus-gallery-in-java \
+  --network=gallery-in-java \
+	-p 9090:9090 \
+	-v prometheus-config-gallery-in-java:/etc/prometheus \
+	prom/prometheus:v2.47.2 --config.file=/etc/prometheus/prometheus.yml
+----
+
+
+You can then navigate to http://localhost:9090 to access the Prometheus UI.
+
+=== Grafana
+
+[source,bash]
+----
+podman run -d \
+  --rm=true \
+	--name grafana-gallery-in-java \
+  --network=gallery-in-java \
+	-p 3000:3000 \
+  grafana/grafana:10.1.5
+----
+
+The Grafana is accessible from http://localhost:3000/
+
+
+== Spotless
+
+The task `spotless:check` will be executed on all build of the code.
+
+.Check to see if the code match spotless
+[source,bash]
+----
+mvn spotless:check
+----
+
+.Change code to match spotless
+[source,bash]
+----
+mvn spotless:apply
+----
+
+- https://github.com/diffplug
+- https://github.com/diffplug/spotless/tree/main/plugin-maven
+
+
